@@ -45,7 +45,7 @@ function renderInlineMarkdown(text: string): ReactNode[] {
             href={linkUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-blue-700 underline underline-offset-2"
+            className="font-medium text-sky-700 underline decoration-sky-400 underline-offset-2 transition hover:text-sky-800"
           >
             {linkLabel}
           </a>
@@ -57,14 +57,14 @@ function renderInlineMarkdown(text: string): ReactNode[] {
       nodes.push(
         <code
           key={`inline-${tokenIndex}`}
-          className="rounded bg-slate-100 px-1 py-0.5 text-[0.85em] text-slate-800"
+          className="rounded-md bg-sky-100 px-1.5 py-0.5 text-[0.85em] font-medium text-sky-800"
         >
           {codeText}
         </code>
       );
     } else if (boldText) {
       nodes.push(
-        <strong key={`inline-${tokenIndex}`} className="font-semibold text-slate-800">
+        <strong key={`inline-${tokenIndex}`} className="font-semibold text-slate-900">
           {boldText}
         </strong>
       );
@@ -114,7 +114,7 @@ export default function MarkdownPreview({ content }: Props) {
     blocks.push(
       <p
         key={`block-${blockIndex++}`}
-        className="text-base leading-relaxed text-slate-700"
+        className="text-base leading-8 text-slate-700"
       >
         {renderInlineMarkdown(paragraphText)}
       </p>
@@ -129,7 +129,7 @@ export default function MarkdownPreview({ content }: Props) {
     blocks.push(
       <ul
         key={`block-${blockIndex++}`}
-        className="list-disc space-y-1 pl-5 text-base text-slate-700"
+        className="list-disc space-y-2 pl-6 text-base text-slate-700 marker:text-sky-500"
       >
         {items.map((item, idx) => (
           <li key={`ul-${blockIndex}-${idx}`}>{renderInlineMarkdown(item)}</li>
@@ -146,7 +146,7 @@ export default function MarkdownPreview({ content }: Props) {
     blocks.push(
       <ol
         key={`block-${blockIndex++}`}
-        className="list-decimal space-y-1 pl-5 text-base text-slate-700"
+        className="list-decimal space-y-2 pl-6 text-base text-slate-700 marker:text-sky-500"
       >
         {items.map((item, idx) => (
           <li key={`ol-${blockIndex}-${idx}`}>{renderInlineMarkdown(item)}</li>
@@ -163,7 +163,7 @@ export default function MarkdownPreview({ content }: Props) {
     blocks.push(
       <blockquote
         key={`block-${blockIndex++}`}
-        className="border-l-4 border-slate-300 bg-slate-50 py-2 pl-4 text-base text-slate-700"
+        className="rounded-r-lg border-l-4 border-cyan-400 bg-cyan-50/70 py-3 pl-4 text-base text-slate-700"
       >
         {quoteLines.map((line, idx) => (
           <p key={`quote-${blockIndex}-${idx}`} className="leading-relaxed">
@@ -230,8 +230,8 @@ export default function MarkdownPreview({ content }: Props) {
       const headingLevel = headingMatch[1].length;
       const headingText = headingMatch[2].trim();
       const headingClassMap: Record<number, string> = {
-        1: "text-2xl font-bold text-slate-900",
-        2: "text-xl font-bold text-slate-900",
+        1: "text-2xl font-bold tracking-tight text-slate-900",
+        2: "text-xl font-bold tracking-tight text-slate-900",
         3: "text-lg font-semibold text-slate-800",
         4: "text-base font-semibold text-slate-800",
         5: "text-base font-medium text-slate-700",
@@ -325,5 +325,5 @@ export default function MarkdownPreview({ content }: Props) {
   flushOrderedList();
   flushQuote();
 
-  return <div className="space-y-3">{blocks}</div>;
+  return <div className="space-y-4">{blocks}</div>;
 }
