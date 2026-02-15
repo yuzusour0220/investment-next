@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import {
   AiInvestmentInsight,
   Company,
@@ -102,6 +103,15 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col items-center px-4 py-16">
+      {/* アプリロゴ */}
+      <Image
+        src="/logo.png"
+        alt="投資判断アプリのロゴ"
+        width={72}
+        height={72}
+        className="mb-3 h-auto w-16 rounded-xl shadow-sm sm:w-[72px]"
+      />
+
       {/* アプリタイトル */}
       <h1 className="text-2xl font-bold text-slate-800 mb-2">投資判断アプリ</h1>
       <p className="text-sm text-slate-500 mb-8">
