@@ -3,13 +3,12 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import {
-  AiInvestmentInsight,
+  AiNarrativeAnalysis,
   Company,
   FinancialMetrics,
   InvestmentResult as ResultType,
 } from "@/types/company";
 import { evaluate } from "@/lib/evaluate";
-import { generateMockAiInsight } from "@/lib/mock-ai-insight";
 import CompanySearch from "@/components/CompanySearch";
 import EvaluateButton from "@/components/EvaluateButton";
 import AiInsightCard from "@/components/AiInsightCard";
@@ -30,10 +29,12 @@ export default function Home() {
   const [isEvaluating, setIsEvaluating] = useState(false);
   // API失敗時のメッセージ
   const [errorMessage, setErrorMessage] = useState("");
-  // AI分析結果（モック）
-  const [aiInsight, setAiInsight] = useState<AiInvestmentInsight | null>(null);
+  // AI分析結果（文章出力）
+  const [aiNarrative, setAiNarrative] = useState<AiNarrativeAnalysis | null>(null);
   // AI分析中フラグ
   const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
+  // AI分析失敗時のメッセージ
+  const [aiErrorMessage, setAiErrorMessage] = useState("");
   // 最新リクエスト判定用ID（古い非同期結果の反映を防ぐ）
   const aiRequestIdRef = useRef(0);
 
@@ -42,23 +43,53 @@ export default function Home() {
     aiRequestIdRef.current += 1; // 会社切り替え時に古いAI分析結果を無効化する
     setSelectedCompany(company);
     setResult(null); // 前回の結果をクリア
-    setAiInsight(null); // 前回のAI分析をクリア
+    setAiNarrative(null); // 前回のAI分析をクリア
     setIsAiAnalyzing(false); // AI分析中表示もリセット
+    setAiErrorMessage(""); // 前回のAIエラーをクリア
     setErrorMessage(""); // 前回エラーメッセージをクリア
   }
 
-  // 財務判定結果を使ってAI分析（モック）を生成する
-  async function runMockAiAnalysis(evaluated: ResultType) {
+  // 財務判定結果を使ってAI分析APIを呼び出す
+  async function runAiAnalysis(evaluated: ResultType) {
     const requestId = ++aiRequestIdRef.current;
-    setAiInsight(null);
+    setAiNarrative(null);
     setIsAiAnalyzing(true);
+    setAiErrorMessage("");
 
     try {
-      const insight = await generateMockAiInsight(evaluated);
+      const res = await fetch("/api/ai/investment-analysis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(evaluated),
+      });
+
+      const body = (await res.json()) as
+        | AiNarrativeAnalysis
+        | { message?: string };
+
       if (requestId !== aiRequestIdRef.current) {
         return;
       }
-      setAiInsight(insight);
+
+      if (!res.ok) {
+        setAiNarrative(null);
+        setAiErrorMessage(
+          "message" in body && body.message
+            ? body.message
+            : "AI分析の生成に失敗しました"
+        );
+        return;
+      }
+
+      setAiNarrative(body as AiNarrativeAnalysis);
+    } catch {
+      if (requestId !== aiRequestIdRef.current) {
+        return;
+      }
+      setAiNarrative(null);
+      setAiErrorMessage("AI分析の通信に失敗しました。時間をおいて再試行してください。");
     } finally {
       if (requestId === aiRequestIdRef.current) {
         setIsAiAnalyzing(false);
@@ -72,8 +103,9 @@ export default function Home() {
     aiRequestIdRef.current += 1; // 新しい判定開始時に古いAI分析結果を無効化する
     setIsEvaluating(true);
     setErrorMessage("");
-    setAiInsight(null);
+    setAiNarrative(null);
     setIsAiAnalyzing(false);
+    setAiErrorMessage("");
 
     try {
       const res = await fetch(
@@ -92,7 +124,7 @@ export default function Home() {
 
       const evaluated = evaluate(selectedCompany, body as FinancialMetrics);
       setResult(evaluated);
-      void runMockAiAnalysis(evaluated);
+      void runAiAnalysis(evaluated);
     } catch {
       setResult(null);
       setErrorMessage("通信エラーが発生しました。時間をおいて再試行してください。");
@@ -143,7 +175,11 @@ export default function Home() {
         <div className="mt-8 w-full flex justify-center">
           <div className="w-full max-w-md space-y-6">
             <InvestmentResult result={result} />
-            <AiInsightCard insight={aiInsight} isLoading={isAiAnalyzing} />
+            <AiInsightCard
+              analysis={aiNarrative}
+              isLoading={isAiAnalyzing}
+              errorMessage={aiErrorMessage}
+            />
           </div>
         </div>
       )}

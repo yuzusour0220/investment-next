@@ -34,7 +34,7 @@ export type InvestmentResult = {
   verdict: "◯" | "△" | "×";
 };
 
-export type AiInvestmentInsight = {
-  metaAnalysis: string;
-  overallConsideration: string;
+export type AiNarrativeAnalysis = {
+  metaAnalysisText: string;
+  investmentCommentaryText: string;
 };
