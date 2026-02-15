@@ -21,7 +21,7 @@ export default function EvaluateButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className="mt-6 w-full rounded-lg bg-blue-600 px-8 py-3 text-base font-semibold text-white shadow transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto"
+      className="mt-6 w-full rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white shadow transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-400 sm:w-auto"
     >
       {isLoading ? "判定中..." : `${companyName}を判定する`}
     </button>

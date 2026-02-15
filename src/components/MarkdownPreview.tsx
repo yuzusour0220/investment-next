@@ -112,7 +112,10 @@ export default function MarkdownPreview({ content }: Props) {
     if (!paragraphText) return;
 
     blocks.push(
-      <p key={`block-${blockIndex++}`} className="text-sm leading-relaxed text-slate-700">
+      <p
+        key={`block-${blockIndex++}`}
+        className="text-base leading-relaxed text-slate-700"
+      >
         {renderInlineMarkdown(paragraphText)}
       </p>
     );
@@ -124,7 +127,10 @@ export default function MarkdownPreview({ content }: Props) {
     unorderedListBuffer.length = 0;
 
     blocks.push(
-      <ul key={`block-${blockIndex++}`} className="list-disc space-y-1 pl-5 text-sm text-slate-700">
+      <ul
+        key={`block-${blockIndex++}`}
+        className="list-disc space-y-1 pl-5 text-base text-slate-700"
+      >
         {items.map((item, idx) => (
           <li key={`ul-${blockIndex}-${idx}`}>{renderInlineMarkdown(item)}</li>
         ))}
@@ -140,7 +146,7 @@ export default function MarkdownPreview({ content }: Props) {
     blocks.push(
       <ol
         key={`block-${blockIndex++}`}
-        className="list-decimal space-y-1 pl-5 text-sm text-slate-700"
+        className="list-decimal space-y-1 pl-5 text-base text-slate-700"
       >
         {items.map((item, idx) => (
           <li key={`ol-${blockIndex}-${idx}`}>{renderInlineMarkdown(item)}</li>
@@ -157,7 +163,7 @@ export default function MarkdownPreview({ content }: Props) {
     blocks.push(
       <blockquote
         key={`block-${blockIndex++}`}
-        className="border-l-4 border-slate-300 bg-slate-50 py-2 pl-4 text-sm text-slate-700"
+        className="border-l-4 border-slate-300 bg-slate-50 py-2 pl-4 text-base text-slate-700"
       >
         {quoteLines.map((line, idx) => (
           <p key={`quote-${blockIndex}-${idx}`} className="leading-relaxed">
@@ -179,11 +185,11 @@ export default function MarkdownPreview({ content }: Props) {
         className="overflow-hidden rounded-lg bg-slate-900"
       >
         {codeLanguage && (
-          <div className="border-b border-slate-700 px-4 py-2 text-xs text-slate-300">
+          <div className="border-b border-slate-700 px-4 py-2 text-sm text-slate-300">
             {codeLanguage}
           </div>
         )}
-        <pre className="overflow-x-auto px-4 py-3 text-sm text-slate-100">
+        <pre className="overflow-x-auto px-4 py-3 text-base text-slate-100">
           <code>{codeText}</code>
         </pre>
       </div>
@@ -224,12 +230,12 @@ export default function MarkdownPreview({ content }: Props) {
       const headingLevel = headingMatch[1].length;
       const headingText = headingMatch[2].trim();
       const headingClassMap: Record<number, string> = {
-        1: "text-xl font-bold text-slate-900",
-        2: "text-lg font-bold text-slate-900",
-        3: "text-base font-semibold text-slate-800",
-        4: "text-sm font-semibold text-slate-800",
-        5: "text-sm font-medium text-slate-700",
-        6: "text-sm font-medium text-slate-700",
+        1: "text-2xl font-bold text-slate-900",
+        2: "text-xl font-bold text-slate-900",
+        3: "text-lg font-semibold text-slate-800",
+        4: "text-base font-semibold text-slate-800",
+        5: "text-base font-medium text-slate-700",
+        6: "text-base font-medium text-slate-700",
       };
 
       if (headingLevel === 1) {

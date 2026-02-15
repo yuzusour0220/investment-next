@@ -13,6 +13,13 @@ const verdictStyles = {
   "×": "bg-red-100 text-red-700 border-red-300",
 };
 
+// API由来の長い小数を見やすくするため、有効数字4桁で丸める
+function formatMetricValue(value: number): string {
+  return value.toLocaleString("ja-JP", {
+    maximumSignificantDigits: 4,
+  });
+}
+
 /**
  * 投資判定結果コンポーネント
  * - 総合判定（◯/△/×）とスコア（7点中X点）を大きく表示
@@ -20,26 +27,26 @@ const verdictStyles = {
  */
 export default function InvestmentResult({ result }: Props) {
   return (
-    <section className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7">
+    <section className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       {/* 会社名と証券コード */}
-      <h2 className="text-lg font-semibold text-slate-700 mb-4">
+      <h2 className="mb-5 text-xl font-semibold text-slate-700 sm:text-2xl">
         {result.company.name}
-        <span className="ml-2 text-sm text-slate-400">
+        <span className="ml-2 text-base text-slate-400">
           ({result.company.symbol})
         </span>
       </h2>
 
       {/* 総合判定カード: 左に判定マーク、右にスコア */}
       <div
-        className={`flex items-center justify-between rounded-xl border-2 px-6 py-4 mb-6 ${verdictStyles[result.verdict]}`}
+        className={`mb-6 flex items-center justify-between rounded-xl border-2 px-6 py-5 ${verdictStyles[result.verdict]}`}
       >
         <div>
-          <div className="text-sm font-medium opacity-80">総合判定</div>
-          <div className="text-4xl font-bold">{result.verdict}</div>
+          <div className="text-base font-medium opacity-80">総合判定</div>
+          <div className="text-5xl font-bold">{result.verdict}</div>
         </div>
         <div className="text-right">
-          <div className="text-sm font-medium opacity-80">スコア</div>
-          <div className="text-2xl font-bold">{result.score} / 7</div>
+          <div className="text-base font-medium opacity-80">スコア</div>
+          <div className="text-3xl font-bold">{result.score} / 7</div>
         </div>
       </div>
 
@@ -56,17 +63,17 @@ export default function InvestmentResult({ result }: Props) {
             <div className="flex items-center gap-3">
               {/* 合否を丸アイコンで表示（✓ or ✗） */}
               <span
-                className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold text-white ${
+                className={`flex h-8 w-8 items-center justify-center rounded-full text-base font-bold text-white ${
                   ev.passed ? "bg-green-500" : "bg-red-500"
                 }`}
               >
                 {ev.passed ? "✓" : "✗"}
               </span>
               <div>
-                <div className="text-sm font-semibold text-slate-700">
+                <div className="text-base font-semibold text-slate-700">
                   {ev.label}
                 </div>
-                <div className="text-xs text-slate-400">
+                <div className="text-sm text-slate-500">
                   基準: {ev.criterion}
                 </div>
               </div>
@@ -75,11 +82,13 @@ export default function InvestmentResult({ result }: Props) {
             {/* 右側: 実際の値 */}
             <div className="text-right">
               <span
-                className={`text-base font-bold ${
+                className={`text-lg font-bold ${
                   ev.passed ? "text-green-700" : "text-red-700"
                 }`}
               >
-                {ev.value === null ? "値なし" : `${ev.value}${ev.unit}`}
+                {ev.value === null
+                  ? "値なし"
+                  : `${formatMetricValue(ev.value)}${ev.unit}`}
               </span>
             </div>
           </div>

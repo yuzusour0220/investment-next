@@ -150,10 +150,10 @@ export default function Home() {
               />
               <div>
                 {/* アプリタイトル */}
-                <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">
+                <h1 className="text-3xl font-bold text-slate-800 sm:text-4xl">
                   投資判断アプリ
                 </h1>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-base text-slate-500 sm:text-lg">
                   会社名を入力して、投資判断の参考にしましょう
                 </p>
               </div>
@@ -177,7 +177,7 @@ export default function Home() {
 
           {/* エラー表示 */}
           {errorMessage && (
-            <p className="mt-4 text-sm text-red-500" role="alert">
+            <p className="mt-4 text-base text-red-500" role="alert">
               {errorMessage}
             </p>
           )}
@@ -185,7 +185,7 @@ export default function Home() {
 
         {/* 判定結果（ボタン押下後に表示） */}
         {result && (
-          <section className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+          <section className="mt-8 space-y-6">
             <InvestmentResult result={result} />
             <AiInsightCard
               analysis={aiNarrative}

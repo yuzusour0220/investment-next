@@ -120,7 +120,7 @@ export default function CompanySearch({ onSelect }: Props) {
   return (
     <div ref={ref} className="relative w-full">
       {/* ラベル */}
-      <label className="block text-sm font-medium text-slate-600 mb-2">
+      <label className="mb-2 block text-base font-medium text-slate-600">
         会社名（英語）を入力
       </label>
 
@@ -136,7 +136,7 @@ export default function CompanySearch({ onSelect }: Props) {
           setIsOpen(false);
         }}
         placeholder="例: Apple, Microsoft, Toyota"
-        className="w-full rounded-lg border border-slate-300 px-4 py-3 text-base outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+        className="w-full rounded-lg border border-slate-300 px-4 py-3 text-lg outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
       />
 
       {/* 候補リスト: デバウンス後にAPI結果がある場合に表示 */}
@@ -155,12 +155,12 @@ export default function CompanySearch({ onSelect }: Props) {
                 }`}
               >
                 <div>
-                  <div className="font-medium">{company.name}</div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-base font-medium">{company.name}</div>
+                  <div className="text-sm text-slate-500">
                     {company.exchange} / {company.currency}
                   </div>
                 </div>
-                <span className="text-sm text-slate-400">{company.symbol}</span>
+                <span className="text-base text-slate-400">{company.symbol}</span>
               </button>
             </li>
           ))}
@@ -169,14 +169,14 @@ export default function CompanySearch({ onSelect }: Props) {
 
       {/* 読み込み中メッセージ */}
       {isOpen && isLoading && (
-        <div className="absolute z-10 mt-1 w-full rounded-lg border border-slate-200 bg-white shadow-lg px-4 py-3 text-slate-500">
+        <div className="absolute z-10 mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-base text-slate-500 shadow-lg">
           候補を取得中...
         </div>
       )}
 
       {/* エラーメッセージ */}
       {isOpen && !isLoading && errorMessage && (
-        <div className="absolute z-10 mt-1 w-full rounded-lg border border-red-200 bg-white shadow-lg px-4 py-3 text-red-500">
+        <div className="absolute z-10 mt-1 w-full rounded-lg border border-red-200 bg-white px-4 py-3 text-base text-red-500 shadow-lg">
           {errorMessage}
         </div>
       )}
@@ -187,7 +187,7 @@ export default function CompanySearch({ onSelect }: Props) {
         !errorMessage &&
         query.trim().length >= 2 &&
         candidates.length === 0 && (
-        <div className="absolute z-10 mt-1 w-full rounded-lg border border-slate-200 bg-white shadow-lg px-4 py-3 text-slate-400">
+        <div className="absolute z-10 mt-1 w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-base text-slate-400 shadow-lg">
           該当する会社が見つかりません
         </div>
       )}
