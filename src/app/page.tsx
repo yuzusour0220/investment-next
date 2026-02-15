@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
 import {
   AiNarrativeAnalysis,
   Company,
@@ -13,9 +12,6 @@ import CompanySearch from "@/components/CompanySearch";
 import EvaluateButton from "@/components/EvaluateButton";
 import AiInsightCard from "@/components/AiInsightCard";
 import InvestmentResult from "@/components/InvestmentResult";
-
-// ロゴ差し替え時にキャッシュを避けるためのバージョン文字列
-const LOGO_VERSION = "20260215";
 
 /**
  * トップページ
@@ -136,30 +132,26 @@ export default function Home() {
     }
   }
 
+  // 財務指標は再取得せず、現在の判定結果を使ってAI分析のみ再生成する
+  function handleRegenerateAi() {
+    if (!result || isAiAnalyzing) return;
+    void runAiAnalysis(result);
+  }
+
   return (
     <div className="min-h-screen px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <main className="mx-auto w-full max-w-6xl">
         {/* ヘッダーと検索導線を1つのカードにまとめて、横幅を活かしやすくする */}
         <section className="rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-sm sm:p-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
-              {/* アプリロゴ */}
-              <Image
-                src={`/logo.png?v=${LOGO_VERSION}`}
-                alt="投資判断アプリのロゴ"
-                width={72}
-                height={72}
-                className="h-auto w-14 rounded-xl shadow-sm sm:w-[72px]"
-              />
-              <div>
-                {/* アプリタイトル */}
-                <h1 className="text-3xl font-bold text-slate-800 sm:text-4xl">
-                  投資判断アプリ
-                </h1>
-                <p className="mt-1 text-base text-slate-500 sm:text-lg">
-                  会社名を入力して、投資判断の参考にしましょう
-                </p>
-              </div>
+            <div>
+              {/* アプリタイトル */}
+              <h1 className="text-3xl font-bold text-slate-800 sm:text-4xl">
+                投資判断アプリ
+              </h1>
+              <p className="mt-1 text-base text-slate-500 sm:text-lg">
+                会社名を入力して、投資判断の参考にしましょう
+              </p>
             </div>
           </div>
 
@@ -190,6 +182,19 @@ export default function Home() {
         {result && (
           <section className="mt-8 space-y-6">
             <InvestmentResult result={result} />
+
+            {/* AI出力だけを再生成するボタン（財務指標APIは再実行しない） */}
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={handleRegenerateAi}
+                disabled={isAiAnalyzing}
+                className="rounded-lg border border-sky-300 bg-white px-4 py-2 text-sm font-semibold text-sky-700 transition hover:bg-sky-50 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400"
+              >
+                {isAiAnalyzing ? "AIを再生成中..." : "AIの出力を再生成"}
+              </button>
+            </div>
+
             <AiInsightCard
               analysis={aiNarrative}
               isLoading={isAiAnalyzing}

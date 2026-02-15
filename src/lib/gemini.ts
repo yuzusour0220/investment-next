@@ -1,6 +1,7 @@
-const GEMINI_MODEL = "gemini-3-pro-preview"; // 2024年6月時点の最新モデル  
-const GEMINI_API_BASE =
-  "https://generativelanguage.googleapis.com/v1beta/models";
+// Gemini 3 Pro Preview の公式モデルコード
+const GEMINI_MODEL = "gemini-3-flash-preview";
+// 最新REST仕様: https://generativelanguage.googleapis.com/v1beta/{model=models/*}:generateContent
+const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
 
 type GeminiTextResponse = {
   candidates?: Array<{
@@ -10,6 +11,14 @@ type GeminiTextResponse = {
       }>;
     };
   }>;
+};
+
+type GeminiErrorResponse = {
+  error?: {
+    code?: number;
+    message?: string;
+    status?: string;
+  };
 };
 
 export class GeminiApiError extends Error {
@@ -52,9 +61,26 @@ function extractTextFromCandidates(body: GeminiTextResponse): string {
   return text;
 }
 
+// GeminiのエラーJSONを解釈し、上流のHTTPコードと文言をそのまま利用する
+function parseGeminiError(rawText: string): GeminiApiError | null {
+  try {
+    const parsed = JSON.parse(rawText) as GeminiErrorResponse;
+    const status = parsed.error?.code;
+    const message = parsed.error?.message?.trim();
+
+    if (!status || !message) {
+      return null;
+    }
+
+    return new GeminiApiError(message, status, "upstream_http_error");
+  } catch {
+    return null;
+  }
+}
+
 export async function generateTextWithGemini(prompt: string): Promise<string> {
   const apiKey = getGeminiApiKey();
-  const endpoint = `${GEMINI_API_BASE}/${GEMINI_MODEL}:generateContent`;
+  const endpoint = `${GEMINI_API_BASE}/models/${GEMINI_MODEL}:generateContent`;
 
   const response = await fetch(endpoint, {
     method: "POST",
@@ -78,9 +104,14 @@ export async function generateTextWithGemini(prompt: string): Promise<string> {
 
   const rawText = await response.text();
   if (!response.ok) {
+    const parsedError = parseGeminiError(rawText);
+    if (parsedError) {
+      throw parsedError;
+    }
+
     throw new GeminiApiError(
       "Gemini APIの呼び出しに失敗しました",
-      502,
+      response.status || 502,
       "upstream_http_error"
     );
   }
