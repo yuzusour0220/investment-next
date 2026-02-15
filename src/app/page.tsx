@@ -14,6 +14,9 @@ import EvaluateButton from "@/components/EvaluateButton";
 import AiInsightCard from "@/components/AiInsightCard";
 import InvestmentResult from "@/components/InvestmentResult";
 
+// ロゴ差し替え時にキャッシュを避けるためのバージョン文字列
+const LOGO_VERSION = "20260215";
+
 /**
  * トップページ
  * 1. 会社検索コンポーネントで企業を選択
@@ -142,7 +145,7 @@ export default function Home() {
             <div className="flex items-center gap-4">
               {/* アプリロゴ */}
               <Image
-                src="/logo.png"
+                src={`/logo.png?v=${LOGO_VERSION}`}
                 alt="投資判断アプリのロゴ"
                 width={72}
                 height={72}
