@@ -6,13 +6,13 @@ export type Company = {
 };
 
 export type FinancialMetrics = {
-  equityRatio: number;       // 自己資本比率 (%)
+  equityRatio: number | null; // 自己資本比率 (%)
   revenueGrowth: number;     // 売上高成長率 (%)
   netIncomeGrowth: number;   // 当期純利益伸び率 (%)
-  payoutRatio: number;       // 配当性向 (%)
-  dividendYield: number;     // 配当利回り (%)
-  per: number;               // PER (倍)
-  pbr: number;               // PBR (倍)
+  payoutRatio: number | null; // 配当性向 (%)
+  dividendYield: number | null; // 配当利回り (%)
+  per: number | null;        // PER (倍)
+  pbr: number | null;        // PBR (倍)
 };
 
 export type MetricKey = keyof FinancialMetrics;
@@ -21,7 +21,7 @@ export type MetricEvaluation = {
   key: MetricKey;
   label: string;
   criterion: string;
-  value: number;
+  value: number | null;
   unit: string;
   passed: boolean;
 };

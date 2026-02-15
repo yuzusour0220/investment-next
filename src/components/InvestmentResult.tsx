@@ -79,8 +79,7 @@ export default function InvestmentResult({ result }: Props) {
                   ev.passed ? "text-green-700" : "text-red-700"
                 }`}
               >
-                {ev.value}
-                {ev.unit}
+                {ev.value === null ? "値なし" : `${ev.value}${ev.unit}`}
               </span>
             </div>
           </div>

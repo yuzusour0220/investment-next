@@ -130,6 +130,11 @@ function normalizePercent(value: number): number {
   return Math.abs(value) <= 1 ? value * 100 : value;
 }
 
+function toNullIfNegative(value: number): number | null {
+  // 業務上マイナスを許容しない指標は、負値なら値なしとして扱う
+  return value < 0 ? null : value;
+}
+
 function toCompany(item: FmpSearchNameItem): Company {
   const symbol = parseStringField(item.symbol, "symbol");
   const name = parseStringField(item.name, "name");
@@ -210,23 +215,28 @@ export async function fetchFinancialMetricsBySymbol(
   }
 
   return {
-    equityRatio: normalizePercent(totalEquity / totalAssets),
+    equityRatio: toNullIfNegative(normalizePercent(totalEquity / totalAssets)),
     revenueGrowth: normalizePercent(
       parseNumberField(growth.revenueGrowth, "revenueGrowth")
     ),
     netIncomeGrowth: normalizePercent(
       parseNumberField(growth.netIncomeGrowth, "netIncomeGrowth")
     ),
-    payoutRatio: normalizePercent(
-      parseNumberField(ratios.dividendPayoutRatioTTM, "dividendPayoutRatioTTM")
+    payoutRatio: toNullIfNegative(
+      normalizePercent(
+        parseNumberField(ratios.dividendPayoutRatioTTM, "dividendPayoutRatioTTM")
+      )
     ),
-    dividendYield: normalizePercent(
-      parseNumberField(ratios.dividendYieldTTM, "dividendYieldTTM")
+    dividendYield: toNullIfNegative(
+      normalizePercent(
+        parseNumberField(ratios.dividendYieldTTM, "dividendYieldTTM")
+      )
     ),
-    per: parseNumberField(
-      ratios.priceToEarningsRatioTTM,
-      "priceToEarningsRatioTTM"
+    per: toNullIfNegative(
+      parseNumberField(ratios.priceToEarningsRatioTTM, "priceToEarningsRatioTTM")
     ),
-    pbr: parseNumberField(ratios.priceToBookRatioTTM, "priceToBookRatioTTM"),
+    pbr: toNullIfNegative(
+      parseNumberField(ratios.priceToBookRatioTTM, "priceToBookRatioTTM")
+    ),
   };
 }

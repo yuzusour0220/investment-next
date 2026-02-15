@@ -66,14 +66,18 @@ const rules: MetricRule[] = [
 ];
 
 function evaluateMetrics(metrics: FinancialMetrics): MetricEvaluation[] {
-  return rules.map((rule) => ({
-    key: rule.key,
-    label: rule.label,
-    criterion: rule.criterion,
-    value: metrics[rule.key],
-    unit: rule.unit,
-    passed: rule.check(metrics[rule.key]),
-  }));
+  return rules.map((rule) => {
+    const value = metrics[rule.key];
+    return {
+      key: rule.key,
+      label: rule.label,
+      criterion: rule.criterion,
+      value,
+      unit: rule.unit,
+      // 値なし(null)は基準未達として扱う
+      passed: value !== null && rule.check(value),
+    };
+  });
 }
 
 function getVerdict(score: number): "◯" | "△" | "×" {
