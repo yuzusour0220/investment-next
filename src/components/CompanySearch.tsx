@@ -118,7 +118,7 @@ export default function CompanySearch({ onSelect }: Props) {
   }
 
   return (
-    <div ref={ref} className="relative w-full max-w-md">
+    <div ref={ref} className="relative w-full">
       {/* ラベル */}
       <label className="block text-sm font-medium text-slate-600 mb-2">
         会社名（英語）を入力

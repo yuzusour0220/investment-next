@@ -134,55 +134,67 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center px-4 py-16">
-      {/* アプリロゴ */}
-      <Image
-        src="/logo.png"
-        alt="投資判断アプリのロゴ"
-        width={72}
-        height={72}
-        className="mb-3 h-auto w-16 rounded-xl shadow-sm sm:w-[72px]"
-      />
+    <div className="min-h-screen px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <main className="mx-auto w-full max-w-6xl">
+        {/* ヘッダーと検索導線を1つのカードにまとめて、横幅を活かしやすくする */}
+        <section className="rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-sm sm:p-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              {/* アプリロゴ */}
+              <Image
+                src="/logo.png"
+                alt="投資判断アプリのロゴ"
+                width={72}
+                height={72}
+                className="h-auto w-14 rounded-xl shadow-sm sm:w-[72px]"
+              />
+              <div>
+                {/* アプリタイトル */}
+                <h1 className="text-2xl font-bold text-slate-800 sm:text-3xl">
+                  投資判断アプリ
+                </h1>
+                <p className="mt-1 text-sm text-slate-500">
+                  会社名を入力して、投資判断の参考にしましょう
+                </p>
+              </div>
+            </div>
+          </div>
 
-      {/* アプリタイトル */}
-      <h1 className="text-2xl font-bold text-slate-800 mb-2">投資判断アプリ</h1>
-      <p className="text-sm text-slate-500 mb-8">
-        会社名を入力して、投資判断の参考にしましょう
-      </p>
+          {/* 会社検索 */}
+          <div className="mt-6">
+            <CompanySearch onSelect={handleSelect} />
+          </div>
 
-      {/* 会社検索 */}
-      <CompanySearch onSelect={handleSelect} />
+          {/* 判定ボタン（会社選択後、結果表示前に表示） */}
+          {selectedCompany && !result && (
+            <EvaluateButton
+              companyName={selectedCompany.name}
+              onClick={handleEvaluate}
+              disabled={isEvaluating}
+              isLoading={isEvaluating}
+            />
+          )}
 
-      {/* 判定ボタン（会社選択後、結果表示前に表示） */}
-      {selectedCompany && !result && (
-        <EvaluateButton
-          companyName={selectedCompany.name}
-          onClick={handleEvaluate}
-          disabled={isEvaluating}
-          isLoading={isEvaluating}
-        />
-      )}
+          {/* エラー表示 */}
+          {errorMessage && (
+            <p className="mt-4 text-sm text-red-500" role="alert">
+              {errorMessage}
+            </p>
+          )}
+        </section>
 
-      {/* エラー表示 */}
-      {errorMessage && (
-        <p className="mt-4 text-sm text-red-500" role="alert">
-          {errorMessage}
-        </p>
-      )}
-
-      {/* 判定結果（ボタン押下後に表示） */}
-      {result && (
-        <div className="mt-8 w-full flex justify-center">
-          <div className="w-full max-w-md space-y-6">
+        {/* 判定結果（ボタン押下後に表示） */}
+        {result && (
+          <section className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
             <InvestmentResult result={result} />
             <AiInsightCard
               analysis={aiNarrative}
               isLoading={isAiAnalyzing}
               errorMessage={aiErrorMessage}
             />
-          </div>
-        </div>
-      )}
+          </section>
+        )}
+      </main>
     </div>
   );
 }

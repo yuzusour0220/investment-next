@@ -20,7 +20,7 @@ const verdictStyles = {
  */
 export default function InvestmentResult({ result }: Props) {
   return (
-    <div className="w-full max-w-md">
+    <section className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7">
       {/* 会社名と証券コード */}
       <h2 className="text-lg font-semibold text-slate-700 mb-4">
         {result.company.name}
@@ -44,7 +44,7 @@ export default function InvestmentResult({ result }: Props) {
       </div>
 
       {/* 各指標の合否リスト */}
-      <div className="space-y-2">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         {result.evaluations.map((ev) => (
           <div
             key={ev.key}
@@ -85,6 +85,6 @@ export default function InvestmentResult({ result }: Props) {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
