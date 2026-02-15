@@ -1,7 +1,8 @@
 export type Company = {
-  id: string;
+  symbol: string;
   name: string;
-  ticker: string;
+  exchange: string;
+  currency: string;
 };
 
 export type FinancialMetrics = {

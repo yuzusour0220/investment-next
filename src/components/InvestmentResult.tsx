@@ -25,7 +25,7 @@ export default function InvestmentResult({ result }: Props) {
       <h2 className="text-lg font-semibold text-slate-700 mb-4">
         {result.company.name}
         <span className="ml-2 text-sm text-slate-400">
-          ({result.company.id})
+          ({result.company.symbol})
         </span>
       </h2>
 

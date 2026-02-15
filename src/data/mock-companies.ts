@@ -1,12 +1,52 @@
 import { Company } from "@/types/company";
 
 export const mockCompanies: Company[] = [
-  { id: "7203", name: "トヨタ自動車", ticker: "7203.T" },
-  { id: "6758", name: "ソニーグループ", ticker: "6758.T" },
-  { id: "9984", name: "ソフトバンクグループ", ticker: "9984.T" },
-  { id: "6861", name: "キーエンス", ticker: "6861.T" },
-  { id: "8306", name: "三菱UFJフィナンシャル・グループ", ticker: "8306.T" },
-  { id: "9432", name: "日本電信電話（NTT）", ticker: "9432.T" },
-  { id: "4063", name: "信越化学工業", ticker: "4063.T" },
-  { id: "6501", name: "日立製作所", ticker: "6501.T" },
+  {
+    symbol: "7203.T",
+    name: "Toyota Motor Corporation",
+    exchange: "JPX",
+    currency: "JPY",
+  },
+  {
+    symbol: "6758.T",
+    name: "Sony Group Corporation",
+    exchange: "JPX",
+    currency: "JPY",
+  },
+  {
+    symbol: "9984.T",
+    name: "SoftBank Group Corp.",
+    exchange: "JPX",
+    currency: "JPY",
+  },
+  {
+    symbol: "6861.T",
+    name: "Keyence Corporation",
+    exchange: "JPX",
+    currency: "JPY",
+  },
+  {
+    symbol: "8306.T",
+    name: "Mitsubishi UFJ Financial Group, Inc.",
+    exchange: "JPX",
+    currency: "JPY",
+  },
+  {
+    symbol: "9432.T",
+    name: "Nippon Telegraph and Telephone Corporation",
+    exchange: "JPX",
+    currency: "JPY",
+  },
+  {
+    symbol: "4063.T",
+    name: "Shin-Etsu Chemical Co., Ltd.",
+    exchange: "JPX",
+    currency: "JPY",
+  },
+  {
+    symbol: "6501.T",
+    name: "Hitachi, Ltd.",
+    exchange: "JPX",
+    currency: "JPY",
+  },
 ];
