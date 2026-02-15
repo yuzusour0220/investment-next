@@ -1,4 +1,4 @@
-const GEMINI_MODEL = "gemini-3.0-pro";
+const GEMINI_MODEL = "gemini-3-pro-preview"; // 2024年6月時点の最新モデル  
 const GEMINI_API_BASE =
   "https://generativelanguage.googleapis.com/v1beta/models";
 
