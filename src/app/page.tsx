@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
+  AiInvestmentInsight,
   Company,
   FinancialMetrics,
   InvestmentResult as ResultType,
 } from "@/types/company";
 import { evaluate } from "@/lib/evaluate";
+import { generateMockAiInsight } from "@/lib/mock-ai-insight";
 import CompanySearch from "@/components/CompanySearch";
 import EvaluateButton from "@/components/EvaluateButton";
+import AiInsightCard from "@/components/AiInsightCard";
 import InvestmentResult from "@/components/InvestmentResult";
 
 /**
@@ -26,19 +29,50 @@ export default function Home() {
   const [isEvaluating, setIsEvaluating] = useState(false);
   // API失敗時のメッセージ
   const [errorMessage, setErrorMessage] = useState("");
+  // AI分析結果（モック）
+  const [aiInsight, setAiInsight] = useState<AiInvestmentInsight | null>(null);
+  // AI分析中フラグ
+  const [isAiAnalyzing, setIsAiAnalyzing] = useState(false);
+  // 最新リクエスト判定用ID（古い非同期結果の反映を防ぐ）
+  const aiRequestIdRef = useRef(0);
 
   // 会社が選択されたときのハンドラ（まだ判定はしない）
   function handleSelect(company: Company | null) {
+    aiRequestIdRef.current += 1; // 会社切り替え時に古いAI分析結果を無効化する
     setSelectedCompany(company);
     setResult(null); // 前回の結果をクリア
+    setAiInsight(null); // 前回のAI分析をクリア
+    setIsAiAnalyzing(false); // AI分析中表示もリセット
     setErrorMessage(""); // 前回エラーメッセージをクリア
+  }
+
+  // 財務判定結果を使ってAI分析（モック）を生成する
+  async function runMockAiAnalysis(evaluated: ResultType) {
+    const requestId = ++aiRequestIdRef.current;
+    setAiInsight(null);
+    setIsAiAnalyzing(true);
+
+    try {
+      const insight = await generateMockAiInsight(evaluated);
+      if (requestId !== aiRequestIdRef.current) {
+        return;
+      }
+      setAiInsight(insight);
+    } finally {
+      if (requestId === aiRequestIdRef.current) {
+        setIsAiAnalyzing(false);
+      }
+    }
   }
 
   // 「判定する」ボタン押下時に判定を実行
   async function handleEvaluate() {
     if (!selectedCompany) return;
+    aiRequestIdRef.current += 1; // 新しい判定開始時に古いAI分析結果を無効化する
     setIsEvaluating(true);
     setErrorMessage("");
+    setAiInsight(null);
+    setIsAiAnalyzing(false);
 
     try {
       const res = await fetch(
@@ -57,6 +91,7 @@ export default function Home() {
 
       const evaluated = evaluate(selectedCompany, body as FinancialMetrics);
       setResult(evaluated);
+      void runMockAiAnalysis(evaluated);
     } catch {
       setResult(null);
       setErrorMessage("通信エラーが発生しました。時間をおいて再試行してください。");
@@ -96,7 +131,10 @@ export default function Home() {
       {/* 判定結果（ボタン押下後に表示） */}
       {result && (
         <div className="mt-8 w-full flex justify-center">
-          <InvestmentResult result={result} />
+          <div className="w-full max-w-md space-y-6">
+            <InvestmentResult result={result} />
+            <AiInsightCard insight={aiInsight} isLoading={isAiAnalyzing} />
+          </div>
         </div>
       )}
     </div>

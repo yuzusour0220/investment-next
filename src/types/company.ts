@@ -33,3 +33,8 @@ export type InvestmentResult = {
   score: number;
   verdict: "◯" | "△" | "×";
 };
+
+export type AiInvestmentInsight = {
+  metaAnalysis: string;
+  overallConsideration: string;
+};
